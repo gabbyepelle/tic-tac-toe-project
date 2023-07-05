@@ -18,10 +18,8 @@ const displayBoard = function(board){
         }
 }
 
-const checkGameWinner = function(board){
+const checkGameWinner = function(board, p1, p2){
     const h2 = document.querySelector("h2");
-    const box =document.querySelectorAll(".box");
-    let boxes = Array.from(box)
     
     const winning_combinations = [
         [0,1,2],
@@ -33,42 +31,50 @@ const checkGameWinner = function(board){
         [0,4,8],
         [2,4,6]
     ]
-console.log(board)    // for(let comb of winning_combinations){
-    //     if(boxes[comb[0]]=== boxes[comb[1]] && boxes[comb[1]]=== boxes[comb[2]] && boxes[comb[0]].textContent!==""){
-    //         console.log("match found")
-    //         //console.log(board)
-    //         return true
-    //     }
-    // }
+    console.log(board)    
 
 
     for(let comb of winning_combinations){
         
         if(board[comb[0]]=== board[comb[1]] && board[comb[1]]=== board[comb[2]] && board[comb[0]]!==""){
             console.log("match found")
-            //console.log(board)
+            console.log(board)
+            if(board[comb[0]] === p1.marker){
+                h2.textContent = `${p1.name} wins`
+            }else{
+                h2.textContent = `${p2.name} wins`
+            }
             return true
         }
     }
 }
 const checkBoardFull = function(board){
-    return board.every((slot)=>{
-        slot!=="";
-    })
+    
+    if(!board.includes("")){
+        console.log("draw")
+        const h2 = document.querySelector("h2");
+        h2.textContent = "It's a draw!"
+        return true
+    }
 }
 
-const checkGameOver = function(board){
-    if(checkGameWinner(board) || checkBoardFull(board))
+const checkGameOver = function(board, p1, p2){
+    if(checkGameWinner(board, p1, p2) || checkBoardFull(board))
     return true
 }
 
+
+
 const endOfGame = function(board){
     const boxes = document.querySelectorAll(".box");
+    const reset = document.querySelector("#reset");
     boxes.forEach((box)=>{
         box.disabled = true;
     })
+    //reset.classList.toggle("hidden");
 
 }
+
 return {createBoard, displayBoard, checkGameWinner, checkBoardFull, endOfGame, checkGameOver}
 } 
 )()
@@ -101,28 +107,46 @@ const GameController = (()=>{
     Gameboard.displayBoard(gameboard);//should this be passed in? idk
     const player1 = Player("player1", "X")
     const player2 = Player("player2", "O")
-    const players = [player1, player2];
-    let activePlayer = players[0];
-    const switchPlayerTurn = ()=>{
-        activePlayer = activePlayer === players[0] ? players[1] : players[0]
+    // const players = [player1, player2];
+    // let activePlayer = players[0];
+    // const switchPlayerTurn = ()=>{
+    //     activePlayer = activePlayer === players[0] ? players[1] : players[0]
+    // }
+    // const getActivePlayer = ()=> activePlayer;
+    
+const resetButton = document.querySelector("#reset");
+resetButton.addEventListener("click", ()=>{
+    const boxes = document.querySelectorAll(".box")
+    const h2 = document.querySelector("h2");
+    h2.textContent = ""
+    for(let i = 0; i<9; i++){
+        gameboard[i] = ""
     }
-    const getActivePlayer = ()=> activePlayer;
-    
-    
+    boxes.forEach((box)=>{
+        box.textContent = "";
+        box.disabled = false
+    })
+
+})
 
 const boxes = document.querySelectorAll(".box");
     boxes.forEach((box)=>{
         box.addEventListener('click', ()=>{
-            if(!Gameboard.checkGameOver(gameboard)){
+            if(!Gameboard.checkGameOver(gameboard, player1, player2)){
                 if(!gameboard[box.dataset.index]){
                     box.innerText = `${player1.marker}`
                     gameboard[box.dataset.index] = `${player1.marker}`
-                    if(Gameboard.checkGameOver(gameboard)){
+                    if(Gameboard.checkGameOver(gameboard, player1, player2)){
                         Gameboard.endOfGame(gameboard)
                     }else{
                         setTimeout(()=>{
-                            player2.randomMove(gameboard);//this should mot be hard coded 
-                        }, 1000)  
+                            player2.randomMove(gameboard);
+                            if(Gameboard.checkGameOver(gameboard, player1, player2)){
+                                Gameboard.endOfGame(gameboard)
+                            }     
+                        }, 1000
+                        
+                        )  
                     }
                 }else{
                     alert("space is taken")

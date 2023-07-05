@@ -20,55 +20,87 @@ const displayBoard = function(board){
         }
 }
 
+const isEmpty = function(board, index){
+    if(!board[index]){
+        return true
+    }else{
+        return false
+    }
+}
+
+
 return {createBoard, displayBoard}
 } 
 )()
 
 const Player = (name, marker) =>{
-    const makeMove = function(board){
-    const boxes = document.querySelectorAll(".box");
-    boxes.forEach((box)=>{
-        box.addEventListener("click", ()=>{
-            //check if box is empty
-            //add marker to box
-           if(!board[box.dataset.index]){
-            //if the board is null at that position
-            box.innerText = `${marker}`;
-            board[box.dataset.index] = marker;
-            // console.log(board)
-            // player_moves++;
-            // console.log(player_moves)
-           }
-           else{
-            alert("space unavailable")
-           }
+    // const boxes = document.querySelectorAll(".box");
+    // boxes.forEach((box)=>{
+    //     box.addEventListener('click', (e)=>{
+    //         //check if board space is empty
+    //         if(board.isEmpty(e.target.dataset.index)){
+    //             box.innerText = `${marker}`;
+    //         }
+
+
+
+    //       //add marker to board
+         
+          
+    //     })
+    // })
+
+
+
+
+
+
+
+//     const makeMove = function(board){
+//     const boxes = document.querySelectorAll(".box");
+//     boxes.forEach((box)=>{
+//         box.addEventListener("click", ()=>{
+//             //check if box is empty
+//             //add marker to box
+//            if(!board[box.dataset.index]){
+//             //if the board is null at that position
+//             box.innerText = `${marker}`;
+//             board[box.dataset.index] = marker;
+//             //
+//            }
+//            else{
+//             alert("space unavailable")
+//            }
+
             
-        })
-    })
+//         })
+//     })
 
-}
+// } 
 
-const randomMove = function(board){
-    const rand = Math.floor(Math.random() * (board.length -1))
-    const boxes = document.querySelectorAll(".box");
+
+
+// const randomMove = function(board){
+//     const rand = Math.floor(Math.random() * (board.length -1))
+//     const boxes = document.querySelectorAll(".box");
    
-    if(!board[rand]){
-        //console.log(rand)
-        for(let box of boxes){
-            if(box.dataset.index === rand.toString()){
-                console.log("found it")
-                box.innerText = `${marker}`;
-                board[rand] = marker;
-                cpu_moves ++;
-                console.log(board)
-                    }
-            }
-        }else{
-            randomMove(board)
-        }
-    }
-    return{makeMove, randomMove}
-}
+//     if(!board[rand]){
+//         //console.log(rand)
+//         for(let box of boxes){
+//             if(box.dataset.index === rand.toString()){
+//                 console.log("found it")
+//                 box.innerText = `${marker}`;
+//                 board[rand] = marker;
+//                 cpu_moves++;
+//                 console.log(board)
+//                     }
+//             }
+//         }else{
+//             randomMove(board)
+//         }
+//     }
+//     return{makeMove, randomMove}
+// }
 
 
 //create different players
@@ -76,7 +108,7 @@ const randomMove = function(board){
 //check game winner
 //check if board is full
 
-const gameController = (()=>{
+const GameController = (()=>{
     const gameboard = Gameboard.createBoard();
     Gameboard.displayBoard(gameboard);//should this be passed in? idk
     const player1 = Player("player1", "X")
@@ -85,27 +117,54 @@ const gameController = (()=>{
     let activePlayer = players[0];
     const switchPlayerTurn = ()=>{
         activePlayer = activePlayer === players[0] ? players[1] : players[0]
-        alert("switch")
     }
     const getActivePlayer = ()=> activePlayer;
 
-const playRound = ()=>{
-    getActivePlayer().makeMove(gameboard);
-    switchPlayerTurn();
-    //create functions to check for game winner and whether board is full
-    }
+
+            
+            
+            
+
+
+
+         
+          
+       
+
+
+const boxes = document.querySelectorAll(".box");
+    boxes.forEach((box)=>{
+        box.addEventListener('click', (e)=>{
+            //check if board space is empty
+            box.innerText = "m"
+            if(gameboard.isEmpty(gameboard, box.dataset.index)){
+                alert("here")
+            }
+
+
+            //getActivePlayer.playRound(board)
+
+
+          //add marker to board
+         
+          
+        })
+    })
+
+
 
 return{
-     playRound, getActivePlayer
+     getActivePlayer
     }
 
 })()
 
 
-gameController.playRound();
+// const ScreenController = (()=>{
+//     GameController.playRound()
+// })
 
-
-
+//GameController.playRound()
 
 
 

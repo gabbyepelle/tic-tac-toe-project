@@ -71,7 +71,6 @@ const endOfGame = function(board){
     boxes.forEach((box)=>{
         box.disabled = true;
     })
-    //reset.classList.toggle("hidden");
 
 }
 
@@ -107,12 +106,7 @@ const GameController = (()=>{
     Gameboard.displayBoard(gameboard);//should this be passed in? idk
     const player1 = Player("player1", "X")
     const player2 = Player("player2", "O")
-    // const players = [player1, player2];
-    // let activePlayer = players[0];
-    // const switchPlayerTurn = ()=>{
-    //     activePlayer = activePlayer === players[0] ? players[1] : players[0]
-    // }
-    // const getActivePlayer = ()=> activePlayer;
+    
     
 const resetButton = document.querySelector("#reset");
 resetButton.addEventListener("click", ()=>{

@@ -1,11 +1,9 @@
 
 const Gameboard = (()=>{
-    const createBoard = function(){
-        const board = new Array("", "", "", "", "", "", "", "", "");
-        return board
-    
-}
-const displayBoard = function(board){
+
+const board = new Array("", "", "", "", "", "", "", "", "");
+const getBoard = ()=> board
+const displayBoard = function(){
         const container = document.querySelector(".board-container")
         let count = 0
         for(let cell of board){
@@ -18,7 +16,7 @@ const displayBoard = function(board){
         }
 }
 
-const checkGameWinner = function(board, p1, p2){
+const checkGameWinner = function(p1, p2){
     const h2 = document.querySelector("h2");
     
     const winning_combinations = [
@@ -48,7 +46,7 @@ const checkGameWinner = function(board, p1, p2){
         }
     }
 }
-const checkBoardFull = function(board){
+const checkBoardFull = function(){
     
     if(!board.includes("")){
         console.log("draw")
@@ -58,14 +56,14 @@ const checkBoardFull = function(board){
     }
 }
 
-const checkGameOver = function(board, p1, p2){
-    if(checkGameWinner(board, p1, p2) || checkBoardFull(board))
+const checkGameOver = function(p1, p2){
+    if(checkGameWinner(p1, p2) || checkBoardFull(board))
     return true
 }
 
 
 
-const endOfGame = function(board){
+const endOfGame = function(){
     const boxes = document.querySelectorAll(".box");
     const reset = document.querySelector("#reset");
     boxes.forEach((box)=>{
@@ -74,7 +72,7 @@ const endOfGame = function(board){
 
 }
 
-return {createBoard, displayBoard, checkGameWinner, checkBoardFull, endOfGame, checkGameOver}
+return {getBoard, displayBoard, checkGameWinner, checkBoardFull, endOfGame, checkGameOver}
 } 
 )()
 
@@ -102,8 +100,7 @@ const randomMove = function(board){
 
 
 const GameController = (()=>{
-    const gameboard = Gameboard.createBoard();
-    Gameboard.displayBoard(gameboard);//should this be passed in? idk
+    Gameboard.displayBoard();
     const player1 = Player("player1", "X")
     const player2 = Player("player2", "O")
     
@@ -113,6 +110,7 @@ resetButton.addEventListener("click", ()=>{
     const boxes = document.querySelectorAll(".box")
     const h2 = document.querySelector("h2");
     h2.textContent = ""
+    let gameboard = Gameboard.getBoard();
     for(let i = 0; i<9; i++){
         gameboard[i] = ""
     }
@@ -124,19 +122,20 @@ resetButton.addEventListener("click", ()=>{
 })
 
 const boxes = document.querySelectorAll(".box");
+    let gameboard = Gameboard.getBoard()
     boxes.forEach((box)=>{
         box.addEventListener('click', ()=>{
-            if(!Gameboard.checkGameOver(gameboard, player1, player2)){
+            if(!Gameboard.checkGameOver(player1, player2)){
                 if(!gameboard[box.dataset.index]){
                     box.innerText = `${player1.marker}`
                     gameboard[box.dataset.index] = `${player1.marker}`
-                    if(Gameboard.checkGameOver(gameboard, player1, player2)){
-                        Gameboard.endOfGame(gameboard)
+                    if(Gameboard.checkGameOver(player1, player2)){
+                        Gameboard.endOfGame()
                     }else{
                         setTimeout(()=>{
                             player2.randomMove(gameboard);
-                            if(Gameboard.checkGameOver(gameboard, player1, player2)){
-                                Gameboard.endOfGame(gameboard)
+                            if(Gameboard.checkGameOver(player1, player2)){
+                                Gameboard.endOfGame()
                             }     
                         }, 1000
                         
@@ -147,7 +146,7 @@ const boxes = document.querySelectorAll(".box");
                 }
             
             }else{
-                Gameboard.endOfGame(gameboard)
+                Gameboard.endOfGame()
             }
         })
     })
